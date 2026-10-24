@@ -6,6 +6,13 @@
 <title>Downsy Cow</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Downsy Cow: an illustrated picture-book story about a cow with Down syndrome who goes at her own speed.">
+<script>
+  // The theme song starts downloading and playing before anything else on the page loads.
+  window.downsySong = new Audio('downsy-theme.mp3');
+  window.downsySong.preload = 'auto';
+  window.downsySongStart = window.downsySong.play();
+  if (window.downsySongStart && window.downsySongStart.catch) window.downsySongStart.catch(function () {});
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Sniglet:wght@400;800&display=swap">
@@ -641,13 +648,12 @@
     </span>
   </button>
 </div>
-<audio id="theme-song" src="downsy-theme.mp3" preload="auto"></audio>
 
 <script>
   // Theme song: plays on arrival wherever the browser allows sound; browsers that hold sound back
   // until the visitor interacts start it on the first click, tap or key press anywhere.
   (function () {
-    var audio = document.getElementById('theme-song');
+    var audio = window.downsySong || new Audio('downsy-theme.mp3');
     var wrap = document.getElementById('music');
     var btn = document.getElementById('music-btn');
     var hint = document.getElementById('music-hint');
@@ -690,7 +696,11 @@
     });
 
     ACTIVATE.forEach(function (t) { document.addEventListener(t, firstTouch, true); });
-    play();
+    // the song may already be playing (or have failed) from the early start at the top of the page
+    show(!audio.paused);
+    if (audio.error) { wrap.hidden = true; disarm(); }
+    var started = window.downsySongStart || audio.play();
+    if (started && started.then) started.then(disarm).catch(function () {});
   })();
 
   (function () {
