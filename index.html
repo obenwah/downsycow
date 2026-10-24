@@ -151,15 +151,15 @@
   .art {
     margin: 0; border: 4px solid var(--line); border-radius: 34px;
     overflow: hidden; background: var(--card); max-width: 100%; line-height: 0;
-    box-shadow: 8px 8px 0 var(--shadow); transform: rotate(-1deg);
+    box-shadow: 8px 8px 0 var(--shadow);
   }
-  .art svg { display: block; width: 100%; height: auto; }
+  .art svg { display: block; width: 100%; height: auto; shape-rendering: geometricPrecision; }
   @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .art svg { filter: brightness(0.93); } }
   :root[data-theme="dark"] .art svg { filter: brightness(0.93); }
 
   /* spreads */
   .spread { display: grid; grid-template-columns: 1.15fr 1fr; gap: clamp(20px, 4vw, 52px); align-items: center; }
-  .spread:nth-of-type(even) .art { order: 2; transform: rotate(1deg); }
+  .spread:nth-of-type(even) .art { order: 2; }
   .words { min-width: 0; max-width: 40ch; }
   .page-no {
     font-family: var(--font-body); font-weight: 700; font-size: 0.8rem; letter-spacing: 0.12em;
@@ -212,6 +212,12 @@
     .hero, .spread, .grownups { grid-template-columns: 1fr; }
     .spread:nth-of-type(even) .art { order: 0; }
     .words { max-width: none; }
+    .book { padding-bottom: 110px; }
+    .music-btn { width: 58px; height: 58px; border-width: 3px; }
+    .music-btn svg.face { width: 48px; height: 48px; }
+    .music-btn .state { width: 24px; height: 24px; right: -5px; top: -5px; border-width: 2px; }
+    .music-btn .state svg { width: 11px; height: 11px; }
+    .music-hint { font-size: 0.9rem; padding: 8px 12px; }
   }
   @media (prefers-reduced-motion: reduce) {
     .ringing .rings path { animation: none; opacity: 1; }
@@ -638,7 +644,8 @@
 <audio id="theme-song" src="downsy-theme.mp3" preload="auto"></audio>
 
 <script>
-  // Theme song: try to start on arrival; browsers that block that start it on the visitor's first tap or key.
+  // Theme song: plays on arrival wherever the browser allows sound; browsers that hold sound back
+  // until the visitor interacts start it on the first click, tap or key press anywhere.
   (function () {
     var audio = document.getElementById('theme-song');
     var wrap = document.getElementById('music');
@@ -646,6 +653,8 @@
     var hint = document.getElementById('music-hint');
     var iconPlay = document.getElementById('icon-play');
     var iconPause = document.getElementById('icon-pause');
+    // events browsers accept as permission to play sound (pointerdown is not one on phones)
+    var ACTIVATE = ['click', 'touchend', 'keydown'];
     var armed = true;
 
     function show(playing) {
@@ -659,8 +668,7 @@
     function disarm() {
       if (!armed) return;
       armed = false;
-      document.removeEventListener('pointerdown', firstTouch, true);
-      document.removeEventListener('keydown', firstTouch, true);
+      ACTIVATE.forEach(function (t) { document.removeEventListener(t, firstTouch, true); });
     }
     function play() {
       var p = audio.play();
@@ -681,8 +689,7 @@
       if (audio.paused) play(); else { audio.pause(); disarm(); }
     });
 
-    document.addEventListener('pointerdown', firstTouch, true);
-    document.addEventListener('keydown', firstTouch, true);
+    ACTIVATE.forEach(function (t) { document.addEventListener(t, firstTouch, true); });
     play();
   })();
 
