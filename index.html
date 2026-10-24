@@ -173,7 +173,7 @@
     text-transform: uppercase; color: var(--accent); margin: 0 0 0.6em;
     display: inline-block; background: var(--card); border: 2px solid var(--rule); border-radius: 999px; padding: 2px 12px;
   }
-  .words h2 {
+  .words h2, .words h3 {
     font-family: var(--font-display); font-weight: 800; font-size: var(--step-2);
     line-height: 1.1; margin: 0 0 0.5em; text-wrap: balance;
   }
@@ -197,9 +197,45 @@
   .ringing .rings path:nth-child(3) { animation-delay: 0.24s; }
   @keyframes ring { 0% { opacity: 0.2; } 30% { opacity: 1; } 100% { opacity: 0.2; } }
 
+  /* bookshelf */
+  .shelf { display: grid; gap: clamp(20px, 3vw, 32px); }
+  .shelf-head h2 { font-family: var(--font-display); font-weight: 800; font-size: var(--step-2); margin: 0 0 0.2em; line-height: 1.1; }
+  .shelf-head p { margin: 0; color: var(--muted); }
+  .covers { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr)); gap: clamp(18px, 3vw, 30px); }
+  .cover {
+    display: grid; gap: 12px; align-content: start; text-decoration: none; color: var(--fg);
+    background: var(--card); border: 4px solid var(--line); border-radius: 28px; padding: 12px 12px 18px;
+    box-shadow: 6px 6px 0 var(--shadow); transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .cover:hover { transform: translateY(-4px); box-shadow: 8px 10px 0 var(--shadow); }
+  .cover:focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+  .cover .art { border-width: 3px; border-radius: 20px; box-shadow: none; }
+  .cover-text { display: grid; gap: 4px; padding-inline: 6px; }
+  .book-no {
+    font-family: var(--font-body); font-weight: 700; font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--accent-2); margin: 0;
+  }
+  .cover-title { font-family: var(--font-display); font-weight: 800; font-size: var(--step-1); line-height: 1.15; }
+  .cover-blurb { color: var(--muted); font-size: 1rem; line-height: 1.5; }
+
+  /* one story at a time */
+  .story { display: grid; gap: clamp(48px, 8vw, 96px); }
+  .story-top { margin-bottom: calc(-1 * clamp(24px, 5vw, 60px)); }
+  .back {
+    display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-display); font-weight: 800; font-size: 1rem;
+    color: var(--fg); text-decoration: none; background: var(--card); border: 3px solid var(--line); border-radius: 999px; padding: 8px 16px;
+  }
+  .back:hover { background: var(--dot); }
+  .story-head { text-align: center; display: grid; gap: 6px; justify-items: center; }
+  .story-title { font-family: var(--font-display); font-weight: 800; font-size: var(--step-4); line-height: 1; margin: 0; text-wrap: balance; color: var(--accent); }
+  .story-next { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; align-items: center; }
+  .float-hearts use { animation: float 3.4s ease-in-out infinite; }
+  .float-hearts use:nth-child(2) { animation-delay: -1.1s; }
+  .float-hearts use:nth-child(3) { animation-delay: -2.2s; }
+
   /* the end */
   .the-end { text-align: center; display: grid; gap: 6px; justify-items: center; }
-  .the-end p { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: var(--step-4); line-height: 1; }
+  .the-end p { margin: 0; color: var(--fg); font-family: var(--font-display); font-weight: 800; font-size: var(--step-4); line-height: 1; }
   .the-end small { color: var(--muted); font-size: var(--step-0); }
 
   /* grown-ups */
@@ -229,7 +265,8 @@
   @media (prefers-reduced-motion: reduce) {
     .ringing .rings path { animation: none; opacity: 1; }
     .start:hover, .bell-btn:hover { transform: none; }
-    .bob, .float, .music-hint, .playing .notes path { animation: none; }
+    .bob, .float, .music-hint, .playing .notes path, .float-hearts use { animation: none; }
+    .cover:hover { transform: none; }
   }
 </style>
 </head>
@@ -293,8 +330,7 @@
     </symbol>
 
     <!-- Downsy: almond eyes, small ears, round teal glasses, yellow bandana, bell, ear tag 321 -->
-    <symbol id="downsy" viewBox="0 0 220 160">
-      <use href="#cowbody"/>
+    <symbol id="downsy-top" viewBox="0 0 220 160">
       <g stroke="var(--line)" stroke-width="3" stroke-linejoin="round">
         <path d="M136 74 L172 86 L150 108 Z" fill="var(--butter)"/>
         <g fill="var(--line)" stroke="none"><circle cx="150" cy="84" r="2"/><circle cx="158" cy="93" r="2"/><circle cx="150" cy="98" r="2"/></g>
@@ -325,17 +361,45 @@
         <circle cx="157" cy="106" r="2.2" fill="var(--line)"/>
       </g>
     </symbol>
+
+    <symbol id="downsy" viewBox="0 0 220 160"><use href="#cowbody"/><use href="#downsy-top"/></symbol>
+    <symbol id="cowbody3" viewBox="0 0 220 160">
+      <g stroke="var(--line)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+        <path d="M36 80 Q16 94 22 118" fill="none"/>
+        <ellipse cx="22" cy="122" rx="6" ry="8" fill="var(--tuft)"/>
+        <rect x="50" y="98" width="17" height="46" rx="7" fill="var(--cow)"/>
+        <rect x="76" y="100" width="17" height="44" rx="7" fill="var(--cow)"/>
+        <rect x="124" y="100" width="17" height="44" rx="7" fill="var(--cow)"/>
+        <rect x="50" y="135" width="17" height="10" rx="3" fill="var(--hoof)"/>
+        <rect x="76" y="135" width="17" height="10" rx="3" fill="var(--hoof)"/>
+        <rect x="124" y="135" width="17" height="10" rx="3" fill="var(--hoof)"/>
+        <ellipse cx="102" cy="86" rx="68" ry="38" fill="var(--cow)"/>
+        <g stroke="none" fill="var(--spot)">
+          <path d="M80 86 C58 72 64 56 80 64 C96 56 102 72 80 86Z"/>
+          <ellipse cx="124" cy="98" rx="15" ry="10"/>
+          <ellipse cx="57" cy="96" rx="9" ry="7"/>
+          <ellipse cx="140" cy="70" rx="8" ry="6"/>
+        </g>
+      </g>
+    </symbol>
+    <!-- Downsy (and any cow) lifting a front hoof to sign -->
+    <symbol id="downsy-sign" viewBox="0 0 220 160"><use href="#cowbody3"/><use href="#downsy-top"/><g stroke-linecap="round" fill="none"><path d="M146 106 L196 96" stroke="var(--line)" stroke-width="21"/><path d="M146 106 L196 96" stroke="var(--cow)" stroke-width="15"/><path d="M192 96.8 L196 96" stroke="var(--hoof)" stroke-width="15"/></g></symbol>
+    <symbol id="cow-sign" viewBox="0 0 220 160"><use href="#cowbody3"/><use href="#cowhead"/><circle cx="160" cy="54" r="5.5" fill="var(--line)"/><circle cx="188" cy="54" r="5.5" fill="var(--line)"/><circle cx="162" cy="52" r="1.9" fill="#fff"/><circle cx="190" cy="52" r="1.9" fill="#fff"/><g stroke-linecap="round" fill="none"><path d="M146 106 L196 96" stroke="var(--line)" stroke-width="21"/><path d="M146 106 L196 96" stroke="var(--cow)" stroke-width="15"/><path d="M192 96.8 L196 96" stroke="var(--hoof)" stroke-width="15"/></g></symbol>
+    <symbol id="heart" viewBox="0 0 20 18"><path d="M10 16.5 C-5 7 1.5 -3.5 10 3.5 C18.5 -3.5 25 7 10 16.5Z" fill="var(--frame)" stroke="var(--line)" stroke-width="1.6"/></symbol>
+    <symbol id="acorn" viewBox="0 0 20 24"><g stroke="var(--line)" stroke-width="1.8"><ellipse cx="10" cy="15" rx="7" ry="8" fill="#c08a55"/><path d="M2 12 Q10 3 18 12 Z" fill="#7a5233"/><path d="M10 5 V1" fill="none"/></g></symbol>
+    <symbol id="pumpkin" viewBox="0 0 100 80"><g stroke="var(--line)" stroke-width="3"><ellipse cx="50" cy="50" rx="45" ry="28" fill="#f08a3c"/><ellipse cx="50" cy="50" rx="27" ry="28" fill="#f59a4c"/><ellipse cx="50" cy="50" rx="9" ry="28" fill="#f08a3c"/></g><path d="M50 23 Q47 12 56 6" fill="none" stroke="#4f8a3a" stroke-width="6" stroke-linecap="round"/></symbol>
+    <symbol id="can" viewBox="0 0 64 46"><g stroke="var(--line)" stroke-width="3" stroke-linejoin="round"><path d="M14 16 Q25 1 36 16" fill="none"/><path d="M42 24 L58 9" stroke-width="7" stroke-linecap="round"/><path d="M42 24 L58 9" stroke="#7cc3e3" stroke-width="3" stroke-linecap="round"/><rect x="8" y="16" width="36" height="27" rx="6" fill="#7cc3e3"/><circle cx="59" cy="8" r="4.5" fill="#7cc3e3"/></g></symbol>
   </defs>
 </svg>
 
 <main class="book">
 
-  <header class="hero">
+  <header class="hero home-only">
     <div>
       <p class="hello">Hi, friend! Meet</p>
       <h1>Downsy <span>Cow</span></h1>
-      <p class="sub">A Buttercup Farm story about going at your very own speed.</p>
-      <a class="start" href="#page-1">Start reading</a>
+      <p class="sub">Stories from Buttercup Farm about going at your very own speed.</p>
+      <a class="start" href="#shelf">Pick a story</a>
     </div>
     <figure class="art">
       <svg viewBox="0 0 480 320" role="img" aria-label="Downsy, a white cow with black spots, round teal glasses and a yellow bandana, standing in a green meadow under a sunny sky.">
@@ -362,8 +426,55 @@
     </figure>
   </header>
 
+  <section class="shelf home-only" id="shelf" aria-labelledby="shelf-title">
+    <div class="shelf-head">
+      <h2 id="shelf-title">Pick a story</h2>
+      <p>Four Buttercup Farm stories. Read them in order, or start with your favorite.</p>
+    </div>
+    <div class="covers">
+      <a class="cover" href="#speed">
+        <figure class="art"><svg viewBox="0 0 480 320" role="img" aria-label="Cover: Downsy at sunrise beside the Big Rock on Tall Hill."><rect width="480" height="320" fill="url(#dawn)"/><circle cx="300" cy="226" r="70" fill="var(--butter)" stroke="var(--line)" stroke-width="3"/><path d="M0 232 Q140 200 280 226 T480 214 L480 320 L0 320Z" fill="#8fb7a0"/><path d="M0 320 L0 268 Q240 248 480 274 L480 320Z" fill="var(--grass)" stroke="var(--line)" stroke-width="3"/><ellipse cx="410" cy="272" rx="46" ry="24" fill="var(--rock)" stroke="var(--line)" stroke-width="3"/><use href="#downsy" x="90" y="132" width="200" height="145.5"/></svg></figure>
+        <span class="cover-text">
+          <span class="book-no">Book 1</span>
+          <span class="cover-title">Downsy’s Speed</span>
+          <span class="cover-blurb">Downsy is the slowest cow on Tall Hill. In the fog, that turns out to matter.</span>
+        </span>
+      </a>
+      <a class="cover" href="#words">
+        <figure class="art"><svg viewBox="0 0 480 320" role="img" aria-label="Cover: Downsy lifts a hoof to sign on a lantern-lit stage, with hearts floating around her."><rect width="480" height="320" fill="#3b2a45"/><circle cx="240" cy="150" r="150" fill="#5a3f63" opacity="0.6"/><path d="M0 46 Q120 74 240 48 T480 44" fill="none" stroke="#1f1626" stroke-width="2"/><circle cx="60" cy="52" r="6" fill="#ffe38a" stroke="var(--line)" stroke-width="2"/><circle cx="120" cy="62" r="6" fill="#ffe38a" stroke="var(--line)" stroke-width="2"/><circle cx="180" cy="60" r="6" fill="#ffe38a" stroke="var(--line)" stroke-width="2"/><circle cx="240" cy="52" r="6" fill="#ffe38a" stroke="var(--line)" stroke-width="2"/><circle cx="300" cy="50" r="6" fill="#ffe38a" stroke="var(--line)" stroke-width="2"/><circle cx="360" cy="56" r="6" fill="#ffe38a" stroke="var(--line)" stroke-width="2"/><circle cx="420" cy="50" r="6" fill="#ffe38a" stroke="var(--line)" stroke-width="2"/><rect x="0" y="250" width="480" height="70" fill="var(--wood)" stroke="var(--line)" stroke-width="3"/><path d="M0 0 H86 Q64 130 92 250 H0Z" fill="#c4405a" stroke="var(--line)" stroke-width="3"/><path d="M480 0 H394 Q416 130 388 250 H480Z" fill="#c4405a" stroke="var(--line)" stroke-width="3"/><path d="M0 0 H480 V22 Q450 34 420 22 Q390 34 360 22 Q330 34 300 22 Q270 34 240 22 Q210 34 180 22 Q150 34 120 22 Q90 34 60 22 Q30 34 0 22Z" fill="#a8304a" stroke="var(--line)" stroke-width="3"/><use href="#downsy-sign" x="130" y="124" width="196" height="142.5"/><use href="#heart" x="110" y="110" width="30" height="27"/><use href="#heart" x="330" y="96" width="26" height="23.4"/><use href="#heart" x="356" y="150" width="18" height="16.2"/></svg></figure>
+        <span class="cover-text">
+          <span class="book-no">Book 2</span>
+          <span class="cover-title">The Big Words</span>
+          <span class="cover-blurb">Downsy’s line in the Moo-sical is long. Her friends learn a new way to listen.</span>
+        </span>
+      </a>
+      <a class="cover" href="#school">
+        <figure class="art"><svg viewBox="0 0 480 320" role="img" aria-label="Cover: Downsy and the new calf Pip under the big oak tree at Barn School."><rect width="480" height="320" fill="url(#sky)"/><g fill="#fff" opacity="0.9"><ellipse cx="80" cy="50" rx="34" ry="12"/><ellipse cx="106" cy="42" rx="22" ry="12"/><ellipse cx="410" cy="36" rx="30" ry="11"/></g><path d="M0 250 L480 250 L480 320 L0 320Z" fill="var(--grass)"/><rect x="370" y="114" width="40" height="141" fill="#8a5a3b" stroke="var(--line)" stroke-width="3"/><g fill="#6fae55" stroke="var(--line)" stroke-width="3"><circle cx="332" cy="106" r="48"/><circle cx="448" cy="106" r="48"/><circle cx="390" cy="84" r="66"/></g><g fill="#8fc86f"><circle cx="372" cy="64" r="12"/><circle cx="430" cy="94" r="9"/></g><use href="#downsy" x="20" y="138" width="176" height="128.0"/><use href="#cow" x="206" y="186" width="96" height="69.8" style="--cow:#f6ecda;--spot:#c49a6c;--tuft:#c49a6c"/><use href="#acorn" x="310" y="262" width="16" height="19"/><use href="#acorn" x="330" y="262" width="16" height="19"/><use href="#acorn" x="350" y="262" width="16" height="19"/><use href="#acorn" x="370" y="262" width="16" height="19"/></svg></figure>
+        <span class="cover-text">
+          <span class="book-no">Book 3</span>
+          <span class="cover-title">Barn School</span>
+          <span class="cover-blurb">First day of school, and a new calf nobody knows yet.</span>
+        </span>
+      </a>
+      <a class="cover" href="#pumpkin">
+        <figure class="art"><svg viewBox="0 0 480 320" role="img" aria-label="Cover: Downsy with her big round orange pumpkin in the fall."><rect width="480" height="320" fill="url(#dawn)"/><g fill="#8a5a3b" stroke="var(--line)" stroke-width="3"><rect x="410" y="120" width="20" height="130"/><rect x="52" y="96" width="16" height="154"/></g><g fill="#e98b3a" stroke="var(--line)" stroke-width="3"><circle cx="420" cy="90" r="44"/><circle cx="60" cy="70" r="34"/></g><path d="M0 248 L480 248 L480 320 L0 320Z" fill="var(--grass)"/><path d="M180 300 C220 270 250 306 290 282 S350 266 372 296" fill="none" stroke="#4f8a3a" stroke-width="5" stroke-linecap="round"/><use href="#downsy" x="14" y="128" width="176" height="128.0"/><use href="#pumpkin" x="214" y="176" width="160" height="128"/></svg></figure>
+        <span class="cover-text">
+          <span class="book-no">Book 4</span>
+          <span class="cover-title">Downsy’s Pumpkin</span>
+          <span class="cover-blurb">One seed, one chart, and a lot of very boring mornings.</span>
+        </span>
+      </a>
+    </div>
+  </section>
+
+<article class="story" id="speed" aria-label="Downsy’s Speed" hidden>
+  <nav class="story-top" aria-label="Story navigation"><a class="back" href="#shelf">&larr; All stories</a></nav>
+  <header class="story-head">
+    <p class="book-no">Book 1</p>
+    <h2 class="story-title">Downsy’s Speed</h2>
+  </header>
   <!-- Page 1 -->
-  <section class="spread" id="page-1">
+  <section class="spread" id="speed-1">
     <figure class="art">
       <svg viewBox="0 0 480 320" role="img" aria-label="Downsy and her mama Clementine, a soft brown cow, standing together by a fence with clover at their feet.">
         <rect width="480" height="320" fill="url(#sky)"/>
@@ -379,7 +490,7 @@
     </figure>
     <div class="words">
       <p class="page-no">Page 1</p>
-      <h2>This is Downsy</h2>
+      <h3>This is Downsy</h3>
       <p>Downsy lives on Buttercup Farm with her mama, Clementine, and twenty-nine other cows.</p>
       <p>She wears round glasses and a yellow bandana. Her ear tag says <span class="tag">321</span>. She likes clover, puddles, and the bell song Farmer June plays at sunrise.</p>
       <p>Downsy has Down syndrome. That means she was born with an extra chromosome. Chromosomes are tiny instructions inside every part of a body, and Downsy got one more than most cows.</p>
@@ -388,7 +499,7 @@
   </section>
 
   <!-- Page 2 -->
-  <section class="spread" id="page-2">
+  <section class="spread" id="speed-2">
     <figure class="art">
       <svg viewBox="0 0 480 320" role="img" aria-label="The herd trots up a steep green hill. Downsy rests halfway up beside a big grey rock while Bramble, a brown calf, calls back to her.">
         <rect width="480" height="320" fill="url(#sky)"/>
@@ -411,7 +522,7 @@
     </figure>
     <div class="words">
       <p class="page-no">Page 2</p>
-      <h2>Tall Hill</h2>
+      <h3>Tall Hill</h3>
       <p>Every morning the herd walks up Tall Hill to the sweetest clover. The other cows trot. Downsy walks. Her muscles are a little floppier than theirs, and her legs get tired.</p>
       <p>Halfway up, she rests at the Big Rock.</p>
       <p><span class="say">“Hurry up, slowpoke!”</span> called Bramble, a young bull with burrs in his tail.</p>
@@ -420,7 +531,7 @@
   </section>
 
   <!-- Page 3 -->
-  <section class="spread" id="page-3">
+  <section class="spread" id="speed-3">
     <figure class="art">
       <svg viewBox="0 0 480 320" role="img" aria-label="Downsy practices lifting her hooves by the water trough. A bucket lies tipped over, water spilling out. The words stretch, step, stomp float above her.">
         <rect width="480" height="320" fill="url(#sky)"/>
@@ -446,7 +557,7 @@
     </figure>
     <div class="words">
       <p class="page-no">Page 3</p>
-      <h2>Stretch, Step, Stomp</h2>
+      <h3>Stretch, Step, Stomp</h3>
       <p>Farmer June helps Downsy get stronger. Every afternoon, by the water trough, they practice.</p>
       <p class="beat">Stretch. Step. Stomp.</p>
       <p>Some days it is fun. Some days it is not. One day Downsy kicked the bucket over and cried.</p>
@@ -456,7 +567,7 @@
   </section>
 
   <!-- Page 4 -->
-  <section class="spread" id="page-4">
+  <section class="spread" id="speed-4">
     <figure class="art">
       <svg viewBox="0 0 480 320" role="img" aria-label="At sunset, Downsy stands by the red barn door counting. A chalkboard on a post shows thirty-one tally marks.">
         <rect width="480" height="320" fill="url(#dusk)"/>
@@ -479,7 +590,7 @@
     </figure>
     <div class="words">
       <p class="page-no">Page 4</p>
-      <h2>Thirty-One Names</h2>
+      <h3>Thirty-One Names</h3>
       <p>Downsy knows every cow on Buttercup Farm by name. All thirty-one, counting herself. Peaches. Old Moe. The twins, Dot and Dash. Bramble.</p>
       <p>Every evening, when the herd comes down the hill, Downsy counts them into the barn, one by one.</p>
       <p>Nobody asked her to. She just likes to know that everyone is home.</p>
@@ -487,7 +598,7 @@
   </section>
 
   <!-- Page 5 -->
-  <section class="spread" id="page-5">
+  <section class="spread" id="speed-5">
     <figure class="art">
       <svg viewBox="0 0 480 320" role="img" aria-label="Thick grey fog covers Tall Hill. Downsy stands at the bottom, thinking the number thirty, with a question mark.">
         <rect width="480" height="320" fill="url(#fog)"/>
@@ -508,7 +619,7 @@
     </figure>
     <div class="words">
       <p class="page-no">Page 5</p>
-      <h2>The Fog</h2>
+      <h3>The Fog</h3>
       <p>One evening, a thick fog rolled over Tall Hill. The cows hurried down so fast they bumped into each other.</p>
       <p>Downsy came last, at her speed, counting. <span class="say">“Twenty-eight. Twenty-nine. Thirty.”</span></p>
       <p class="beat">Thirty. Not thirty-one.</p>
@@ -518,7 +629,7 @@
   </section>
 
   <!-- Page 6 -->
-  <section class="spread" id="page-6">
+  <section class="spread" id="speed-6">
     <figure class="art" id="bell-art">
       <svg viewBox="0 0 480 320" role="img" aria-label="Up in the fog, Downsy rings her bell. Bramble, the brown calf, has his tail caught in a blackberry bush.">
         <rect width="480" height="320" fill="url(#fog)"/>
@@ -539,7 +650,7 @@
     </figure>
     <div class="words">
       <p class="page-no">Page 6</p>
-      <h2>Downsy’s Speed</h2>
+      <h3>Downsy’s Speed</h3>
       <p>Downsy turned around and climbed back up into the fog. Stretch. Step. Stomp. Past the Big Rock, she heard a small, sad moo.</p>
       <p>Bramble’s tail was tangled in a blackberry bush, and he was shaking.</p>
       <p>Downsy pulled him free, very gently. Then she rang her bell so the whole farm could hear them.</p>
@@ -555,7 +666,7 @@
   </section>
 
   <!-- Page 7 -->
-  <section class="spread" id="page-7">
+  <section class="spread" id="speed-7">
     <figure class="art">
       <svg viewBox="0 0 480 320" role="img" aria-label="Inside the warm barn, Bramble wears a blue plaid blanket and stands next to Downsy.">
         <rect width="480" height="320" fill="url(#lamp)"/>
@@ -575,7 +686,7 @@
     </figure>
     <div class="words">
       <p class="page-no">Page 7</p>
-      <h2>Home</h2>
+      <h3>Home</h3>
       <p>When the two of them reached the barn, the whole herd mooed at once. Farmer June wrapped Bramble in a blanket.</p>
       <p>Downsy counted one more time. <span class="say">“Thirty-one.”</span></p>
       <p><span class="say">“I’m sorry I called you slowpoke,”</span> said Bramble. <span class="say">“Can I walk with you tomorrow?”</span></p>
@@ -583,7 +694,7 @@
   </section>
 
   <!-- Page 8 -->
-  <section class="spread" id="page-8">
+  <section class="spread" id="speed-8">
     <figure class="art">
       <svg viewBox="0 0 480 320" role="img" aria-label="At sunrise the whole herd stands together at the Big Rock on Tall Hill, watching the sun come up over the valley.">
         <rect width="480" height="320" fill="url(#dawn)"/>
@@ -601,7 +712,7 @@
     </figure>
     <div class="words">
       <p class="page-no">Page 8</p>
-      <h2>Sunrise at the Big Rock</h2>
+      <h3>Sunrise at the Big Rock</h3>
       <p>The next morning, the whole herd walked up Tall Hill at Downsy’s speed. Halfway up, they all stopped at the Big Rock.</p>
       <p>For the first time, every cow on Buttercup Farm watched the sun come up over the valley. It had been there every morning. They had always been going too fast to see it.</p>
       <p><span class="say">“This is my favorite part,”</span> said Downsy.</p>
@@ -612,21 +723,292 @@
     <p>The End</p>
     <small>Some cows are fast. Some cows are slow. Downsy goes Downsy speed.</small>
   </section>
+  <nav class="story-next" aria-label="More stories">
+    <a class="start" href="#words">Next story: The Big Words</a>
+    <a class="back" href="#shelf">All stories</a>
+  </nav>
+</article>
+<article class="story" id="words" aria-label="The Big Words" hidden>
+  <nav class="story-top" aria-label="Story navigation"><a class="back" href="#shelf">&larr; All stories</a></nav>
+  <header class="story-head">
+    <p class="book-no">Book 2</p>
+    <h2 class="story-title">The Big Words</h2>
+  </header>
+  <section class="spread" id="words-1">
+    <figure class="art">
+      <svg viewBox="0 0 480 320" role="img" aria-label="Downsy and Bramble look up at a poster on the red barn that says Harvest Moo-sical, Tonight."><rect width="480" height="320" fill="url(#sky)"/><g fill="#fff" opacity="0.9"><ellipse cx="80" cy="50" rx="34" ry="12"/><ellipse cx="106" cy="42" rx="22" ry="12"/><ellipse cx="410" cy="36" rx="30" ry="11"/></g><path d="M0 252 L480 252 L480 320 L0 320Z" fill="var(--grass)"/><rect x="250" y="56" width="230" height="196" fill="var(--barn)" stroke="var(--line)" stroke-width="3"/><g stroke="#a8432f" stroke-width="2"><path d="M250 100H480M250 150H480M250 200H480"/></g><g transform="rotate(-3 370 140)"><rect x="285" y="80" width="172" height="118" rx="6" fill="#fff7d6" stroke="var(--line)" stroke-width="3"/><text x="371" y="116" text-anchor="middle" font-family="Sniglet, sans-serif" font-weight="800" font-size="20" fill="var(--line)">Harvest</text><text x="371" y="146" text-anchor="middle" font-family="Sniglet, sans-serif" font-weight="800" font-size="22" fill="#e2558b">Moo-sical!</text><text x="371" y="178" text-anchor="middle" font-family="Sniglet, sans-serif" font-weight="800" font-size="16" fill="var(--line)">Tonight</text></g><use href="#downsy" x="20" y="140" width="160" height="116.4"/><use href="#cow" x="176" y="180" width="96" height="69.8" style="--cow:#8b5a3c;--spot:#5a3622;--tuft:#5a3622"/><g fill="#ff9fb5"><circle cx="30" cy="292" r="4"/><circle cx="452" cy="300" r="4"/><circle cx="250" cy="306" r="3"/></g><g fill="var(--butter)"><circle cx="70" cy="304" r="3.5"/><circle cx="410" cy="286" r="3"/></g></svg>
+    </figure>
+    <div class="words">
+      <p class="page-no">Page 1</p>
+      <h3>The Moo-sical</h3>
+      <p>Farmer June pinned a poster to the barn. The Harvest Moo-sical was coming, and every cow on Buttercup Farm would get a line to say.</p>
+      <p>Downsy got the very first line: <span class="say">“Welcome, everyone, to Buttercup Farm!”</span></p>
+      <p>That is a lot of words. Long words are tricky for Downsy. She always knows exactly what she wants to say. Sometimes the words just come out slowly.</p>
+    </div>
+  </section>
+  <section class="spread" id="words-2">
+    <figure class="art">
+      <svg viewBox="0 0 480 320" role="img" aria-label="Three picture cards show Downsy’s hoof signs: a waving hoof for hello, a heart for love, and two hooves together for friend. Downsy lifts a hoof next to Mama Clementine."><rect width="480" height="320" fill="url(#sky)"/><path d="M0 260 L480 260 L480 320 L0 320Z" fill="var(--grass)"/><g fill="#fff" stroke="var(--line)" stroke-width="3"><rect x="40" y="24" width="100" height="84" rx="16"/><rect x="190" y="24" width="100" height="84" rx="16"/><rect x="340" y="24" width="100" height="84" rx="16"/></g><g transform="rotate(-18 90 56)" stroke="var(--line)" stroke-width="3"><rect x="76" y="38" width="28" height="34" rx="10" fill="var(--cow)"/><rect x="76" y="62" width="28" height="10" rx="3" fill="var(--hoof)"/></g><g fill="none" stroke="var(--line)" stroke-width="3" stroke-linecap="round"><path d="M112 42 q6 9 0 18"/><path d="M119 37 q10 14 0 28"/></g><use href="#heart" x="216" y="36" width="48" height="43.2"/><g stroke="var(--line)" stroke-width="3"><rect x="359" y="40" width="26" height="32" rx="9" fill="var(--cow)" transform="rotate(14 372 56)"/><rect x="395" y="40" width="26" height="32" rx="9" fill="var(--cow)" transform="rotate(-14 408 56)"/></g><text x="90" y="98" text-anchor="middle" font-family="Sniglet, sans-serif" font-weight="800" font-size="17" fill="var(--line)">hello</text><text x="240" y="98" text-anchor="middle" font-family="Sniglet, sans-serif" font-weight="800" font-size="17" fill="var(--line)">love</text><text x="390" y="98" text-anchor="middle" font-family="Sniglet, sans-serif" font-weight="800" font-size="17" fill="var(--line)">friend</text><use href="#downsy-sign" x="30" y="146" width="160" height="116.4"/><g transform="translate(470 140) scale(-1 1)" style="--cow:#d9b48f;--spot:#8a5a3b;--tuft:#8a5a3b"><use href="#cow" width="170" height="123.6"/></g><g fill="#ff9fb5"><circle cx="30" cy="292" r="4"/><circle cx="452" cy="300" r="4"/><circle cx="250" cy="306" r="3"/></g><g fill="var(--butter)"><circle cx="70" cy="304" r="3.5"/><circle cx="410" cy="286" r="3"/></g></svg>
+    </figure>
+    <div class="words">
+      <p class="page-no">Page 2</p>
+      <h3>Hoof Signs</h3>
+      <p>When words are slow, Downsy uses hoof signs.</p>
+      <p>A wave means <em>hello</em>. A hoof on her heart means <em>love</em>. Two hooves together mean <em>friend</em>.</p>
+      <p>Mama Clementine knows every sign. Most of the other cows don’t. When Downsy signs to them, they just blink.</p>
+    </div>
+  </section>
+  <section class="spread" id="words-3">
+    <figure class="art">
+      <svg viewBox="0 0 480 320" role="img" aria-label="By the water trough, Downsy says Wel-come while Bramble lifts his hoof to copy her sign."><rect width="480" height="320" fill="url(#sky)"/><path d="M0 250 L480 250 L480 320 L0 320Z" fill="var(--grass)"/><rect x="350" y="206" width="118" height="44" rx="6" fill="var(--wood)" stroke="var(--line)" stroke-width="3"/><rect x="358" y="208" width="102" height="9" fill="#8ec9e6"/><use href="#downsy" x="24" y="136" width="160" height="116.4"/><g transform="translate(330 152) scale(-1 1)" style="--cow:#8b5a3c;--spot:#5a3622;--tuft:#5a3622"><use href="#cow-sign" width="130" height="94.5"/></g><g class="bubble"><rect x="72" y="44" width="150" height="50" rx="22" fill="#fff" stroke="var(--line)" stroke-width="3"/><path d="M140 92 L150 140 L160 92" fill="#fff" stroke="var(--line)" stroke-width="3" stroke-linejoin="round"/><rect x="141" y="89" width="18" height="7" fill="#fff"/><text x="147" y="76.1" text-anchor="middle" font-family="Sniglet, sans-serif" font-weight="800" font-size="21" fill="var(--line)">Wel-come!</text></g><g fill="#ff9fb5"><circle cx="30" cy="292" r="4"/><circle cx="452" cy="300" r="4"/><circle cx="250" cy="306" r="3"/></g><g fill="var(--butter)"><circle cx="70" cy="304" r="3.5"/><circle cx="410" cy="286" r="3"/></g></svg>
+    </figure>
+    <div class="words">
+      <p class="page-no">Page 3</p>
+      <h3>Practice</h3>
+      <p>Every day by the water trough, Downsy practiced her line, with words and signs together.</p>
+      <p><span class="say">“Wel-come. Ev-ery-one.”</span></p>
+      <p>Some days the words got stuck, and she stomped. Bramble watched for a while. Then he asked, <span class="say">“Will you teach me the signs?”</span></p>
+      <p>So she did. Bramble was slow at signs. Downsy was very patient.</p>
+    </div>
+  </section>
+  <section class="spread" id="words-4">
+    <figure class="art">
+      <svg viewBox="0 0 480 320" role="img" aria-label="Downsy stands alone in the middle of a lantern-lit stage with red curtains, a speech bubble showing only dots, while the audience waits in the dark."><rect width="480" height="320" fill="#3b2a45"/><circle cx="240" cy="150" r="150" fill="#5a3f63" opacity="0.6"/><path d="M0 46 Q120 74 240 48 T480 44" fill="none" stroke="#1f1626" stroke-width="2"/><circle cx="60" cy="52" r="6" fill="#ffe38a" stroke="var(--line)" stroke-width="2"/><circle cx="120" cy="62" r="6" fill="#ffe38a" stroke="var(--line)" stroke-width="2"/><circle cx="180" cy="60" r="6" fill="#ffe38a" stroke="var(--line)" stroke-width="2"/><circle cx="240" cy="52" r="6" fill="#ffe38a" stroke="var(--line)" stroke-width="2"/><circle cx="300" cy="50" r="6" fill="#ffe38a" stroke="var(--line)" stroke-width="2"/><circle cx="360" cy="56" r="6" fill="#ffe38a" stroke="var(--line)" stroke-width="2"/><circle cx="420" cy="50" r="6" fill="#ffe38a" stroke="var(--line)" stroke-width="2"/><rect x="0" y="232" width="480" height="88" fill="var(--wood)" stroke="var(--line)" stroke-width="3"/><path d="M0 0 H86 Q64 130 92 232 H0Z" fill="#c4405a" stroke="var(--line)" stroke-width="3"/><path d="M480 0 H394 Q416 130 388 232 H480Z" fill="#c4405a" stroke="var(--line)" stroke-width="3"/><path d="M0 0 H480 V22 Q450 34 420 22 Q390 34 360 22 Q330 34 300 22 Q270 34 240 22 Q210 34 180 22 Q150 34 120 22 Q90 34 60 22 Q30 34 0 22Z" fill="#a8304a" stroke="var(--line)" stroke-width="3"/><use href="#downsy" x="150" y="120" width="160" height="116.4"/><g class="bubble"><rect x="290" y="62" width="96" height="46" rx="22" fill="#fff" stroke="var(--line)" stroke-width="3"/><path d="M302 106 L300 140 L322 106" fill="#fff" stroke="var(--line)" stroke-width="3" stroke-linejoin="round"/><rect x="303" y="103" width="18" height="7" fill="#fff"/><text x="338" y="95.1" text-anchor="middle" font-family="Sniglet, sans-serif" font-weight="800" font-size="30" fill="var(--line)">...</text></g><ellipse cx="14" cy="282" rx="9" ry="5" fill="#1f1626"/><ellipse cx="46" cy="282" rx="9" ry="5" fill="#1f1626"/><ellipse cx="30" cy="300" rx="26" ry="24" fill="#1f1626"/><ellipse cx="76" cy="290" rx="9" ry="5" fill="#1f1626"/><ellipse cx="108" cy="290" rx="9" ry="5" fill="#1f1626"/><ellipse cx="92" cy="308" rx="26" ry="24" fill="#1f1626"/><ellipse cx="138" cy="282" rx="9" ry="5" fill="#1f1626"/><ellipse cx="170" cy="282" rx="9" ry="5" fill="#1f1626"/><ellipse cx="154" cy="300" rx="26" ry="24" fill="#1f1626"/><ellipse cx="200" cy="290" rx="9" ry="5" fill="#1f1626"/><ellipse cx="232" cy="290" rx="9" ry="5" fill="#1f1626"/><ellipse cx="216" cy="308" rx="26" ry="24" fill="#1f1626"/><ellipse cx="262" cy="282" rx="9" ry="5" fill="#1f1626"/><ellipse cx="294" cy="282" rx="9" ry="5" fill="#1f1626"/><ellipse cx="278" cy="300" rx="26" ry="24" fill="#1f1626"/><ellipse cx="324" cy="290" rx="9" ry="5" fill="#1f1626"/><ellipse cx="356" cy="290" rx="9" ry="5" fill="#1f1626"/><ellipse cx="340" cy="308" rx="26" ry="24" fill="#1f1626"/><ellipse cx="386" cy="282" rx="9" ry="5" fill="#1f1626"/><ellipse cx="418" cy="282" rx="9" ry="5" fill="#1f1626"/><ellipse cx="402" cy="300" rx="26" ry="24" fill="#1f1626"/><ellipse cx="448" cy="290" rx="9" ry="5" fill="#1f1626"/><ellipse cx="480" cy="290" rx="9" ry="5" fill="#1f1626"/><ellipse cx="464" cy="308" rx="26" ry="24" fill="#1f1626"/></svg>
+    </figure>
+    <div class="words">
+      <p class="page-no">Page 4</p>
+      <h3>Showtime</h3>
+      <p>On the night of the Moo-sical, the barn glowed with lanterns. Hens, ducks and goats filled the seats.</p>
+      <p>Downsy walked to the middle of the stage. Every eye was on her.</p>
+      <p>She opened her mouth. Nothing came out. The barn was very, very quiet.</p>
+    </div>
+  </section>
+  <section class="spread" id="words-5">
+    <figure class="art">
+      <svg viewBox="0 0 480 320" role="img" aria-label="In front of the stage the herd all lift their hooves to sign friend, with hearts floating up toward Downsy."><rect width="480" height="320" fill="#3b2a45"/><circle cx="240" cy="150" r="150" fill="#5a3f63" opacity="0.6"/><path d="M0 46 Q120 74 240 48 T480 44" fill="none" stroke="#1f1626" stroke-width="2"/><circle cx="60" cy="52" r="6" fill="#ffe38a" stroke="var(--line)" stroke-width="2"/><circle cx="120" cy="62" r="6" fill="#ffe38a" stroke="var(--line)" stroke-width="2"/><circle cx="180" cy="60" r="6" fill="#ffe38a" stroke="var(--line)" stroke-width="2"/><circle cx="240" cy="52" r="6" fill="#ffe38a" stroke="var(--line)" stroke-width="2"/><circle cx="300" cy="50" r="6" fill="#ffe38a" stroke="var(--line)" stroke-width="2"/><circle cx="360" cy="56" r="6" fill="#ffe38a" stroke="var(--line)" stroke-width="2"/><circle cx="420" cy="50" r="6" fill="#ffe38a" stroke="var(--line)" stroke-width="2"/><rect x="0" y="196" width="480" height="124" fill="var(--wood)" stroke="var(--line)" stroke-width="3"/><path d="M0 0 H86 Q64 130 92 196 H0Z" fill="#c4405a" stroke="var(--line)" stroke-width="3"/><path d="M480 0 H394 Q416 130 388 196 H480Z" fill="#c4405a" stroke="var(--line)" stroke-width="3"/><path d="M0 0 H480 V22 Q450 34 420 22 Q390 34 360 22 Q330 34 300 22 Q270 34 240 22 Q210 34 180 22 Q150 34 120 22 Q90 34 60 22 Q30 34 0 22Z" fill="#a8304a" stroke="var(--line)" stroke-width="3"/><use href="#downsy" x="176" y="92" width="132" height="96.0"/><use href="#cow-sign" x="0" y="214" width="116" height="84.4" style="--cow:#8b5a3c;--spot:#5a3622;--tuft:#5a3622"/><use href="#cow-sign" x="120" y="226" width="100" height="72.7" style="--cow:#f1c9a5;--spot:#c98a5b;--tuft:#c98a5b"/><g transform="translate(362 226) scale(-1 1)" style="--cow:#d9d4cc;--spot:#6b6258;--tuft:#6b6258"><use href="#cow-sign" width="100" height="72.7"/></g><g transform="translate(474 216) scale(-1 1)" style="--cow:#d9b48f;--spot:#8a5a3b;--tuft:#8a5a3b"><use href="#cow-sign" width="112" height="81.5"/></g><g class="float-hearts"><use href="#heart" x="120" y="170" width="24" height="21.6"/><use href="#heart" x="236" y="150" width="20" height="18"/><use href="#heart" x="330" y="172" width="26" height="23.4"/><use href="#heart" x="204" y="186" width="16" height="14.4"/></g></svg>
+    </figure>
+    <div class="words">
+      <p class="page-no">Page 5</p>
+      <h3>Friend</h3>
+      <p>Then, in the front row, Bramble lifted his hoof and made the sign for <em>friend</em>.</p>
+      <p>Peaches did it too. Then Old Moe. Then the whole herd. Bramble had been teaching them all week.</p>
+      <p>Downsy’s heart felt warm all the way down to her hooves.</p>
+    </div>
+  </section>
+  <section class="spread" id="words-6">
+    <figure class="art">
+      <svg viewBox="0 0 480 320" role="img" aria-label="Downsy lifts her hoof and says Welcome, everyone, to Buttercup Farm, while confetti falls over the stage."><rect width="480" height="320" fill="#3b2a45"/><circle cx="240" cy="150" r="150" fill="#5a3f63" opacity="0.6"/><path d="M0 46 Q120 74 240 48 T480 44" fill="none" stroke="#1f1626" stroke-width="2"/><circle cx="60" cy="52" r="6" fill="#ffe38a" stroke="var(--line)" stroke-width="2"/><circle cx="120" cy="62" r="6" fill="#ffe38a" stroke="var(--line)" stroke-width="2"/><circle cx="180" cy="60" r="6" fill="#ffe38a" stroke="var(--line)" stroke-width="2"/><circle cx="240" cy="52" r="6" fill="#ffe38a" stroke="var(--line)" stroke-width="2"/><circle cx="300" cy="50" r="6" fill="#ffe38a" stroke="var(--line)" stroke-width="2"/><circle cx="360" cy="56" r="6" fill="#ffe38a" stroke="var(--line)" stroke-width="2"/><circle cx="420" cy="50" r="6" fill="#ffe38a" stroke="var(--line)" stroke-width="2"/><rect x="0" y="236" width="480" height="84" fill="var(--wood)" stroke="var(--line)" stroke-width="3"/><path d="M0 0 H86 Q64 130 92 236 H0Z" fill="#c4405a" stroke="var(--line)" stroke-width="3"/><path d="M480 0 H394 Q416 130 388 236 H480Z" fill="#c4405a" stroke="var(--line)" stroke-width="3"/><path d="M0 0 H480 V22 Q450 34 420 22 Q390 34 360 22 Q330 34 300 22 Q270 34 240 22 Q210 34 180 22 Q150 34 120 22 Q90 34 60 22 Q30 34 0 22Z" fill="#a8304a" stroke="var(--line)" stroke-width="3"/><use href="#downsy-sign" x="150" y="124" width="170" height="123.6"/><g class="bubble"><rect x="110" y="34" width="260" height="68" rx="22" fill="#fff" stroke="var(--line)" stroke-width="3"/><path d="M252 100 L262 150 L272 100" fill="#fff" stroke="var(--line)" stroke-width="3" stroke-linejoin="round"/><rect x="253" y="97" width="18" height="7" fill="#fff"/><text x="240" y="61.8" text-anchor="middle" font-family="Sniglet, sans-serif" font-weight="800" font-size="17" fill="var(--line)">Welcome, everyone,</text><text x="240" y="85.6" text-anchor="middle" font-family="Sniglet, sans-serif" font-weight="800" font-size="17" fill="var(--line)">to Buttercup Farm!</text></g><rect x="104" y="120" width="8" height="12" rx="2" fill="#ffd45c" transform="rotate(20 104 120)"/><rect x="380" y="118" width="8" height="12" rx="2" fill="#ff9fb5" transform="rotate(-30 380 118)"/><rect x="64" y="200" width="8" height="12" rx="2" fill="#7cc3e3" transform="rotate(40 64 200)"/><rect x="420" y="190" width="8" height="12" rx="2" fill="#ffd45c" transform="rotate(-15 420 190)"/><rect x="140" y="170" width="8" height="12" rx="2" fill="#ff9fb5" transform="rotate(60 140 170)"/><rect x="350" y="160" width="8" height="12" rx="2" fill="#7cc3e3" transform="rotate(10 350 160)"/><ellipse cx="14" cy="282" rx="9" ry="5" fill="#1f1626"/><ellipse cx="46" cy="282" rx="9" ry="5" fill="#1f1626"/><ellipse cx="30" cy="300" rx="26" ry="24" fill="#1f1626"/><ellipse cx="76" cy="290" rx="9" ry="5" fill="#1f1626"/><ellipse cx="108" cy="290" rx="9" ry="5" fill="#1f1626"/><ellipse cx="92" cy="308" rx="26" ry="24" fill="#1f1626"/><ellipse cx="138" cy="282" rx="9" ry="5" fill="#1f1626"/><ellipse cx="170" cy="282" rx="9" ry="5" fill="#1f1626"/><ellipse cx="154" cy="300" rx="26" ry="24" fill="#1f1626"/><ellipse cx="200" cy="290" rx="9" ry="5" fill="#1f1626"/><ellipse cx="232" cy="290" rx="9" ry="5" fill="#1f1626"/><ellipse cx="216" cy="308" rx="26" ry="24" fill="#1f1626"/><ellipse cx="262" cy="282" rx="9" ry="5" fill="#1f1626"/><ellipse cx="294" cy="282" rx="9" ry="5" fill="#1f1626"/><ellipse cx="278" cy="300" rx="26" ry="24" fill="#1f1626"/><ellipse cx="324" cy="290" rx="9" ry="5" fill="#1f1626"/><ellipse cx="356" cy="290" rx="9" ry="5" fill="#1f1626"/><ellipse cx="340" cy="308" rx="26" ry="24" fill="#1f1626"/><ellipse cx="386" cy="282" rx="9" ry="5" fill="#1f1626"/><ellipse cx="418" cy="282" rx="9" ry="5" fill="#1f1626"/><ellipse cx="402" cy="300" rx="26" ry="24" fill="#1f1626"/><ellipse cx="448" cy="290" rx="9" ry="5" fill="#1f1626"/><ellipse cx="480" cy="290" rx="9" ry="5" fill="#1f1626"/><ellipse cx="464" cy="308" rx="26" ry="24" fill="#1f1626"/></svg>
+    </figure>
+    <div class="words">
+      <p class="page-no">Page 6</p>
+      <h3>Welcome</h3>
+      <p>Downsy waved hello. She put her hoof on her heart. Then she said it, slowly and clearly.</p>
+      <p><span class="say">“Welcome, everyone, to Buttercup Farm!”</span></p>
+      <p>The barn shook with moos. Since that night, every cow on Buttercup Farm can talk two ways: with words, and with hooves.</p>
+    </div>
+  </section>
+  <section class="the-end" aria-label="The end">
+    <p>The End</p>
+    <small>Some words come fast. Some words come slow. Every word counts.</small>
+  </section>
+  <nav class="story-next" aria-label="More stories">
+    <a class="start" href="#school">Next story: Barn School</a>
+    <a class="back" href="#shelf">All stories</a>
+  </nav>
+</article>
+<article class="story" id="school" aria-label="Barn School" hidden>
+  <nav class="story-top" aria-label="Story navigation"><a class="back" href="#shelf">&larr; All stories</a></nav>
+  <header class="story-head">
+    <p class="book-no">Book 3</p>
+    <h2 class="story-title">Barn School</h2>
+  </header>
+  <section class="spread" id="school-1">
+    <figure class="art">
+      <svg viewBox="0 0 480 320" role="img" aria-label="Downsy stands near a big oak tree and a chalkboard that says Barn School, with two little butterflies beside her."><rect width="480" height="320" fill="url(#sky)"/><g fill="#fff" opacity="0.9"><ellipse cx="80" cy="50" rx="34" ry="12"/><ellipse cx="106" cy="42" rx="22" ry="12"/><ellipse cx="410" cy="36" rx="30" ry="11"/></g><path d="M0 250 L480 250 L480 320 L0 320Z" fill="var(--grass)"/><rect x="360" y="110" width="40" height="145" fill="#8a5a3b" stroke="var(--line)" stroke-width="3"/><g fill="#6fae55" stroke="var(--line)" stroke-width="3"><circle cx="322" cy="102" r="48"/><circle cx="438" cy="102" r="48"/><circle cx="380" cy="80" r="66"/></g><g fill="#8fc86f"><circle cx="362" cy="60" r="12"/><circle cx="420" cy="90" r="9"/></g><g stroke="var(--line)" stroke-width="3"><path d="M206 230 L220 200M290 230 L276 200" fill="none"/></g><rect x="178" y="112" width="140" height="92" rx="8" fill="var(--board)" stroke="var(--line)" stroke-width="3"/><text x="248" y="164.5" text-anchor="middle" font-family="Sniglet, sans-serif" font-weight="800" font-size="18" fill="#f4f1e8">Barn School</text><use href="#downsy" x="14" y="148" width="150" height="109.1"/><g stroke="var(--line)" stroke-width="1.6"><ellipse cx="34" cy="120" rx="7" ry="5" fill="#ff9fb5" transform="rotate(-30 34 120)"/><ellipse cx="44" cy="120" rx="7" ry="5" fill="#ff9fb5" transform="rotate(30 44 120)"/><ellipse cx="160" cy="104" rx="6" ry="4" fill="var(--butter)" transform="rotate(-30 160 104)"/><ellipse cx="169" cy="104" rx="6" ry="4" fill="var(--butter)" transform="rotate(30 169 104)"/></g><g fill="#ff9fb5"><circle cx="30" cy="292" r="4"/><circle cx="452" cy="300" r="4"/><circle cx="250" cy="306" r="3"/></g><g fill="var(--butter)"><circle cx="70" cy="304" r="3.5"/><circle cx="410" cy="286" r="3"/></g></svg>
+    </figure>
+    <div class="words">
+      <p class="page-no">Page 1</p>
+      <h3>Barn School</h3>
+      <p>Under the big oak tree, Old Moe runs Barn School for the young cows.</p>
+      <p>On the first day, Downsy packed a clover lunch. Her tummy felt fluttery.</p>
+      <p><span class="say">“What if I’m the slowest?”</span> she asked Mama.</p>
+      <p><span class="say">“Then you’ll be the one who notices the most,”</span> said Mama.</p>
+    </div>
+  </section>
+  <section class="spread" id="school-2">
+    <figure class="art">
+      <svg viewBox="0 0 480 320" role="img" aria-label="A tiny cream-colored calf peeks over a hay bale while Downsy looks over at him."><rect width="480" height="320" fill="url(#sky)"/><path d="M0 250 L480 250 L480 320 L0 320Z" fill="var(--grass)"/><g transform="translate(392 132) scale(-1 1)" style="--cow:#f6ecda;--spot:#c49a6c;--tuft:#c49a6c"><use href="#cow" width="104" height="75.6"/></g><rect x="300" y="190" width="140" height="66" rx="10" fill="#e8c65a" stroke="var(--line)" stroke-width="3"/><g stroke="#b8952f" stroke-width="2"><path d="M310 210h120M310 226h120M310 242h120"/></g><g fill="none" stroke="var(--line)" stroke-width="2" stroke-linecap="round"><path d="M286 146 l-7 -5M284 160 l-9 0"/></g><use href="#downsy" x="30" y="144" width="150" height="109.1"/><g fill="#ff9fb5"><circle cx="30" cy="292" r="4"/><circle cx="452" cy="300" r="4"/><circle cx="250" cy="306" r="3"/></g><g fill="var(--butter)"><circle cx="70" cy="304" r="3.5"/><circle cx="410" cy="286" r="3"/></g></svg>
+    </figure>
+    <div class="words">
+      <p class="page-no">Page 2</p>
+      <h3>The New Calf</h3>
+      <p>That morning, a new calf arrived from a farm far away. He was very small, and he hid behind a hay bale.</p>
+      <p>Nobody knew his name. Nobody asked.</p>
+    </div>
+  </section>
+  <section class="spread" id="school-3">
+    <figure class="art">
+      <svg viewBox="0 0 480 320" role="img" aria-label="Old Moe stands by a chalkboard showing 1 2 3. Downsy has a row of acorns and a big letter D traced in the mud."><rect width="480" height="320" fill="url(#sky)"/><path d="M0 250 L480 250 L480 320 L0 320Z" fill="var(--grass)"/><rect x="272" y="26" width="180" height="86" rx="8" fill="var(--board)" stroke="var(--line)" stroke-width="3"/><text x="362" y="79.8" text-anchor="middle" font-family="Sniglet, sans-serif" font-weight="800" font-size="30" fill="#f4f1e8">1  2  3</text><g transform="translate(478 146) scale(-1 1)" style="--cow:#d9d4cc;--spot:#6b6258;--tuft:#6b6258"><use href="#cow" width="132" height="96.0"/></g><use href="#downsy" x="30" y="138" width="150" height="109.1"/><use href="#acorn" x="190" y="240" width="16" height="19"/><use href="#acorn" x="207" y="240" width="16" height="19"/><use href="#acorn" x="224" y="240" width="16" height="19"/><use href="#acorn" x="241" y="240" width="16" height="19"/><use href="#acorn" x="258" y="240" width="16" height="19"/><use href="#acorn" x="275" y="240" width="16" height="19"/><use href="#acorn" x="292" y="240" width="16" height="19"/><use href="#acorn" x="309" y="240" width="16" height="19"/><ellipse cx="232" cy="292" rx="66" ry="19" fill="#8a6a4f"/><text x="232" y="303" text-anchor="middle" font-family="Sniglet, sans-serif" font-weight="800" font-size="30" fill="#5a4030">D</text></svg>
+    </figure>
+    <div class="words">
+      <p class="page-no">Page 3</p>
+      <h3>Lessons</h3>
+      <p>Old Moe taught counting with acorns. Downsy loved counting. She counted every acorn twice, just to be sure.</p>
+      <p>Letters were harder. Downsy traced a D in the mud, slowly, over and over. D for Downsy.</p>
+      <p><span class="say">“Everyone learns at their own speed,”</span> said Old Moe. <span class="say">“That’s how school works here.”</span></p>
+    </div>
+  </section>
+  <section class="spread" id="school-4">
+    <figure class="art">
+      <svg viewBox="0 0 480 320" role="img" aria-label="Under the oak tree, Downsy asks the new calf his name, and he answers Pip."><rect width="480" height="320" fill="url(#sky)"/><path d="M0 250 L480 250 L480 320 L0 320Z" fill="var(--grass)"/><rect x="60" y="120" width="40" height="135" fill="#8a5a3b" stroke="var(--line)" stroke-width="3"/><g fill="#6fae55" stroke="var(--line)" stroke-width="3"><circle cx="22" cy="112" r="48"/><circle cx="138" cy="112" r="48"/><circle cx="80" cy="90" r="66"/></g><g fill="#8fc86f"><circle cx="62" cy="70" r="12"/><circle cx="120" cy="100" r="9"/></g><use href="#cow" x="108" y="192" width="88" height="64.0" style="--cow:#f6ecda;--spot:#c49a6c;--tuft:#c49a6c"/><g transform="translate(446 140) scale(-1 1)"><use href="#downsy" width="160" height="116.4"/></g><g class="bubble"><rect x="226" y="22" width="236" height="66" rx="22" fill="#fff" stroke="var(--line)" stroke-width="3"/><path d="M308 86 L318 150 L328 86" fill="#fff" stroke="var(--line)" stroke-width="3" stroke-linejoin="round"/><rect x="309" y="83" width="18" height="7" fill="#fff"/><text x="344" y="48.8" text-anchor="middle" font-family="Sniglet, sans-serif" font-weight="800" font-size="17" fill="var(--line)">I am Downsy.</text><text x="344" y="72.6" text-anchor="middle" font-family="Sniglet, sans-serif" font-weight="800" font-size="17" fill="var(--line)">What is your name?</text></g><g class="bubble"><rect x="120" y="128" width="76" height="42" rx="21" fill="#fff" stroke="var(--line)" stroke-width="3"/><path d="M156 168 L166 196 L176 168" fill="#fff" stroke="var(--line)" stroke-width="3" stroke-linejoin="round"/><rect x="157" y="165" width="18" height="7" fill="#fff"/><text x="158" y="155.4" text-anchor="middle" font-family="Sniglet, sans-serif" font-weight="800" font-size="19" fill="var(--line)">Pip.</text></g><g fill="#ff9fb5"><circle cx="30" cy="292" r="4"/><circle cx="452" cy="300" r="4"/><circle cx="250" cy="306" r="3"/></g><g fill="var(--butter)"><circle cx="70" cy="304" r="3.5"/><circle cx="410" cy="286" r="3"/></g></svg>
+    </figure>
+    <div class="words">
+      <p class="page-no">Page 4</p>
+      <h3>Lunchtime</h3>
+      <p>At lunch, the new calf sat all alone under the tree.</p>
+      <p>Downsy remembered what it felt like to be the one at the back. She walked over.</p>
+      <p><span class="say">“I am Downsy. What is your name?”</span></p>
+      <p><span class="say">“Pip,”</span> said the new calf, very quietly.</p>
+    </div>
+  </section>
+  <section class="spread" id="school-5">
+    <figure class="art">
+      <svg viewBox="0 0 480 320" role="img" aria-label="Downsy and Pip face each other over a row of acorns, with the letters D and P traced in the mud and hearts above them."><rect width="480" height="320" fill="url(#sky)"/><g fill="#fff" opacity="0.9"><ellipse cx="80" cy="50" rx="34" ry="12"/><ellipse cx="106" cy="42" rx="22" ry="12"/><ellipse cx="410" cy="36" rx="30" ry="11"/></g><path d="M0 250 L480 250 L480 320 L0 320Z" fill="var(--grass)"/><use href="#downsy" x="30" y="146" width="150" height="109.1"/><g transform="translate(420 182) scale(-1 1)" style="--cow:#f6ecda;--spot:#c49a6c;--tuft:#c49a6c"><use href="#cow" width="100" height="72.7"/></g><use href="#acorn" x="196" y="238" width="16" height="19"/><use href="#acorn" x="218" y="238" width="16" height="19"/><use href="#acorn" x="240" y="238" width="16" height="19"/><use href="#acorn" x="262" y="238" width="16" height="19"/><use href="#acorn" x="284" y="238" width="16" height="19"/><ellipse cx="266" cy="294" rx="74" ry="19" fill="#8a6a4f"/><text x="242" y="305" text-anchor="middle" font-family="Sniglet, sans-serif" font-weight="800" font-size="28" fill="#5a4030">D</text><text x="290" y="305" text-anchor="middle" font-family="Sniglet, sans-serif" font-weight="800" font-size="28" fill="#5a4030">P</text><g class="float-hearts"><use href="#heart" x="226" y="130" width="24" height="21.6"/><use href="#heart" x="262" y="108" width="18" height="16.2"/></g></svg>
+    </figure>
+    <div class="words">
+      <p class="page-no">Page 5</p>
+      <h3>Pip and Downsy</h3>
+      <p>Pip couldn’t count past three yet. Downsy showed him with acorns, one by one.</p>
+      <p>Pip was quick at letters. He helped Downsy make her D nice and round, and she helped him make a P.</p>
+      <p>By the end of the day, they were both a little better at something.</p>
+    </div>
+  </section>
+  <section class="spread" id="school-6">
+    <figure class="art">
+      <svg viewBox="0 0 480 320" role="img" aria-label="At sunset Downsy and Pip walk home side by side along a dirt path, saying Same speed."><rect width="480" height="320" fill="url(#dusk)"/><circle cx="420" cy="236" r="44" fill="var(--butter)" stroke="var(--line)" stroke-width="3"/><path d="M0 228 Q240 200 480 226 L480 320 L0 320Z" fill="var(--grass-deep)" stroke="var(--line)" stroke-width="3"/><path d="M0 300 Q240 236 480 256 L480 276 Q240 262 0 320Z" fill="#e8d3a8"/><use href="#downsy" x="112" y="158" width="140" height="101.8"/><use href="#cow" x="252" y="190" width="90" height="65.5" style="--cow:#f6ecda;--spot:#c49a6c;--tuft:#c49a6c"/><g class="bubble"><rect x="96" y="64" width="150" height="46" rx="22" fill="#fff" stroke="var(--line)" stroke-width="3"/><path d="M210 108 L220 168 L230 108" fill="#fff" stroke="var(--line)" stroke-width="3" stroke-linejoin="round"/><rect x="211" y="105" width="18" height="7" fill="#fff"/><text x="171" y="93.0" text-anchor="middle" font-family="Sniglet, sans-serif" font-weight="800" font-size="18" fill="var(--line)">Same speed?</text></g><g class="bubble"><rect x="286" y="112" width="150" height="46" rx="22" fill="#fff" stroke="var(--line)" stroke-width="3"/><path d="M312 156 L322 196 L332 156" fill="#fff" stroke="var(--line)" stroke-width="3" stroke-linejoin="round"/><rect x="313" y="153" width="18" height="7" fill="#fff"/><text x="361" y="141.0" text-anchor="middle" font-family="Sniglet, sans-serif" font-weight="800" font-size="18" fill="var(--line)">Same speed!</text></g></svg>
+    </figure>
+    <div class="words">
+      <p class="page-no">Page 6</p>
+      <h3>Same Speed</h3>
+      <p>Walking home, Downsy asked, <span class="say">“Want to walk together tomorrow? Same speed?”</span></p>
+      <p><span class="say">“Same speed!”</span> said Pip.</p>
+      <p>That night Downsy counted the herd into the barn. Thirty-two. One new name to remember.</p>
+    </div>
+  </section>
+  <section class="the-end" aria-label="The end">
+    <p>The End</p>
+    <small>Everyone learns at their own speed.</small>
+  </section>
+  <nav class="story-next" aria-label="More stories">
+    <a class="start" href="#pumpkin">Next story: Downsy’s Pumpkin</a>
+    <a class="back" href="#shelf">All stories</a>
+  </nav>
+</article>
+<article class="story" id="pumpkin" aria-label="Downsy’s Pumpkin" hidden>
+  <nav class="story-top" aria-label="Story navigation"><a class="back" href="#shelf">&larr; All stories</a></nav>
+  <header class="story-head">
+    <p class="book-no">Book 4</p>
+    <h2 class="story-title">Downsy’s Pumpkin</h2>
+  </header>
+  <section class="spread" id="pumpkin-1">
+    <figure class="art">
+      <svg viewBox="0 0 480 320" role="img" aria-label="In spring, Downsy stands by rows of fresh dirt and a little wooden sign that says plant me."><rect width="480" height="320" fill="url(#sky)"/><g fill="#fff" opacity="0.9"><ellipse cx="80" cy="50" rx="34" ry="12"/><ellipse cx="106" cy="42" rx="22" ry="12"/><ellipse cx="410" cy="36" rx="30" ry="11"/></g><path d="M0 240 L480 240 L480 320 L0 320Z" fill="var(--grass)"/><ellipse cx="226" cy="272" rx="34" ry="10" fill="#8a6a4f"/><ellipse cx="300" cy="272" rx="34" ry="10" fill="#8a6a4f"/><ellipse cx="374" cy="272" rx="34" ry="10" fill="#8a6a4f"/><ellipse cx="448" cy="272" rx="34" ry="10" fill="#8a6a4f"/><ellipse cx="226" cy="266" rx="4" ry="3" fill="#5a4030"/><rect x="404" y="186" width="8" height="64" fill="var(--wood)" stroke="var(--line)" stroke-width="2"/><rect x="356" y="166" width="104" height="38" rx="5" fill="#d8a878" stroke="var(--line)" stroke-width="3"/><text x="408" y="191" text-anchor="middle" font-family="Sniglet, sans-serif" font-weight="800" font-size="15" fill="var(--line)">plant me</text><use href="#downsy" x="30" y="136" width="160" height="116.4"/><g fill="#ffc4d6" stroke="var(--line)" stroke-width="1.5"><circle cx="196" cy="90" r="5"/><circle cx="230" cy="64" r="4"/><circle cx="300" cy="96" r="5"/></g><g fill="#ff9fb5"><circle cx="30" cy="292" r="4"/><circle cx="452" cy="300" r="4"/><circle cx="250" cy="306" r="3"/></g><g fill="var(--butter)"><circle cx="70" cy="304" r="3.5"/><circle cx="410" cy="286" r="3"/></g></svg>
+    </figure>
+    <div class="words">
+      <p class="page-no">Page 1</p>
+      <h3>One Seed</h3>
+      <p>In spring, Farmer June gave every young cow one pumpkin seed.</p>
+      <p><span class="say">“Plant it, water it every single day,”</span> she said, <span class="say">“and in the fall you’ll have a pumpkin.”</span></p>
+      <p>Downsy planted hers right next to the barn.</p>
+    </div>
+  </section>
+  <section class="spread" id="pumpkin-2">
+    <figure class="art">
+      <svg viewBox="0 0 480 320" role="img" aria-label="On the red barn wall hangs Downsy’s water chart covered in tally marks. Downsy waters a tiny sprout with a watering can."><rect width="480" height="244" fill="var(--barn)"/><g stroke="#a8432f" stroke-width="2"><path d="M0 60H480M0 120H480M0 180H480"/></g><path d="M0 240 L480 240 L480 320 L0 320Z" fill="var(--grass)"/><path d="M0 240H480" stroke="var(--line)" stroke-width="3"/><rect x="250" y="24" width="206" height="150" rx="6" fill="#fffaf0" stroke="var(--line)" stroke-width="3"/><text x="353" y="52" text-anchor="middle" font-family="Sniglet, sans-serif" font-weight="800" font-size="17" fill="var(--line)">Water chart</text><g stroke="var(--line)" stroke-width="3" stroke-linecap="round" fill="none"><use href="#five" x="238" y="10"/><use href="#five" x="278" y="10"/><use href="#five" x="318" y="10"/><use href="#five" x="358" y="10"/></g><g stroke="var(--line)" stroke-width="3" stroke-linecap="round" fill="none"><use href="#five" x="238" y="64"/><path d="M318 120v28"/><path d="M326 120v28"/><path d="M334 120v28"/></g><use href="#downsy" x="20" y="134" width="150" height="109.1"/><use href="#can" x="186" y="196" width="64" height="46"/><g fill="#7cc3e3"><ellipse cx="252" cy="214" rx="2.5" ry="4"/><ellipse cx="258" cy="226" rx="2.5" ry="4"/><ellipse cx="252" cy="236" rx="2.5" ry="4"/></g><path d="M262 272 q-2 -18 2 -30" fill="none" stroke="#4f8a3a" stroke-width="4" stroke-linecap="round"/><ellipse cx="253" cy="250" rx="9" ry="5" fill="#74b35e" stroke="var(--line)" stroke-width="2" transform="rotate(-25 253 250)"/><ellipse cx="273" cy="245" rx="9" ry="5" fill="#74b35e" stroke="var(--line)" stroke-width="2" transform="rotate(25 273 245)"/><ellipse cx="262" cy="274" rx="18" ry="6" fill="#8a6a4f"/></svg>
+    </figure>
+    <div class="words">
+      <p class="page-no">Page 2</p>
+      <h3>The Chart</h3>
+      <p>Downsy made a chart on the barn wall. Every morning after she watered her seed, she made a mark.</p>
+      <p>One mark. Two marks. Five marks make a gate.</p>
+      <p>Downsy likes doing things the same way every day. It helps her remember.</p>
+    </div>
+  </section>
+  <section class="spread" id="pumpkin-3">
+    <figure class="art">
+      <svg viewBox="0 0 480 320" role="img" aria-label="Under a big hot sun, Bramble and Pip splash in the pond while Downsy waters her growing vine."><rect width="480" height="320" fill="url(#sky)"/><circle cx="420" cy="60" r="40" fill="var(--butter)" stroke="var(--line)" stroke-width="3"/><g stroke="var(--butter)" stroke-width="4" stroke-linecap="round"><path d="M360 60h-14M420 120v14M376 104l-10 10M376 16l-10-10"/></g><path d="M0 244 L480 244 L480 320 L0 320Z" fill="var(--grass)"/><ellipse cx="384" cy="270" rx="96" ry="34" fill="#8ec9e6" stroke="var(--line)" stroke-width="3"/><use href="#cow" x="300" y="214" width="100" height="72.7" style="--cow:#8b5a3c;--spot:#5a3622;--tuft:#5a3622"/><g transform="translate(470 230) scale(-1 1)" style="--cow:#f6ecda;--spot:#c49a6c;--tuft:#c49a6c"><use href="#cow" width="80" height="58.2"/></g><path d="M289 270 A95 33 0 0 0 479 270 Z" fill="#8ec9e6"/><path d="M290 270 A94 32 0 0 0 478 270" fill="none" stroke="#5aa7cc" stroke-width="2" opacity="0.6"/><g fill="#bfe3f3" stroke="var(--line)" stroke-width="1.5"><circle cx="296" cy="226" r="5"/><circle cx="470" cy="236" r="4"/><circle cx="384" cy="214" r="4"/></g><use href="#downsy" x="14" y="136" width="150" height="109.1"/><use href="#can" x="164" y="200" width="56" height="40"/><g fill="#7cc3e3"><path d="M168 150 q4 8 0 11 q-4 -3 0 -11z"/><path d="M178 140 q3 6 0 9 q-3 -2 0 -9z"/></g><path d="M240 276 q-2 -28.8 2 -48" fill="none" stroke="#4f8a3a" stroke-width="4" stroke-linecap="round"/><ellipse cx="225.6" cy="240.8" rx="14.4" ry="8" fill="#74b35e" stroke="var(--line)" stroke-width="2" transform="rotate(-25 225.6 240.8)"/><ellipse cx="257.6" cy="232.8" rx="14.4" ry="8" fill="#74b35e" stroke="var(--line)" stroke-width="2" transform="rotate(25 257.6 232.8)"/><ellipse cx="240" cy="278" rx="18" ry="6" fill="#8a6a4f"/></svg>
+    </figure>
+    <div class="words">
+      <p class="page-no">Page 3</p>
+      <h3>Hot Days</h3>
+      <p>Summer came, and it was hot. The other calves forgot their seeds. They were too busy splashing in the pond.</p>
+      <p>Downsy watered hers every morning. Even when it was hot. Even when her legs were tired. Even when it was boring.</p>
+      <p>Some days it was <em>very</em> boring.</p>
+    </div>
+  </section>
+  <section class="spread" id="pumpkin-4">
+    <figure class="art">
+      <svg viewBox="0 0 480 320" role="img" aria-label="In fall, with orange trees behind her, Downsy stands proudly next to her round orange pumpkin on a long green vine."><rect width="480" height="320" fill="url(#dawn)"/><rect x="410" y="120" width="22" height="120" fill="#8a5a3b" stroke="var(--line)" stroke-width="3"/><g fill="#e98b3a" stroke="var(--line)" stroke-width="3"><circle cx="400" cy="110" r="40"/><circle cx="446" cy="100" r="36"/></g><rect x="250" y="140" width="18" height="100" fill="#8a5a3b" stroke="var(--line)" stroke-width="3"/><circle cx="259" cy="128" r="36" fill="#f2b84b" stroke="var(--line)" stroke-width="3"/><path d="M0 236 L480 236 L480 320 L0 320Z" fill="var(--grass)"/><ellipse cx="360" cy="290" rx="40" ry="11" fill="#a07a58"/><ellipse cx="444" cy="300" rx="34" ry="10" fill="#a07a58"/><g stroke="#7a5a3a" stroke-width="2"><path d="M346 288l10 4M432 298l12 3"/></g><path d="M150 292 C190 262 210 304 250 280 S300 262 318 290" fill="none" stroke="#4f8a3a" stroke-width="5" stroke-linecap="round"/><g fill="#74b35e" stroke="var(--line)" stroke-width="2"><ellipse cx="186" cy="276" rx="12" ry="7"/><ellipse cx="300" cy="276" rx="12" ry="7"/></g><use href="#downsy" x="14" y="132" width="156" height="113.5"/><use href="#pumpkin" x="190" y="214" width="120" height="96"/></svg>
+    </figure>
+    <div class="words">
+      <p class="page-no">Page 4</p>
+      <h3>Fall</h3>
+      <p>When the leaves turned orange, the other pumpkin patches were dry and empty.</p>
+      <p>Downsy’s vine was long and green, and on it grew one round, orange pumpkin.</p>
+      <p>On the barn wall, there were one hundred and twelve marks.</p>
+    </div>
+  </section>
+  <section class="spread" id="pumpkin-5">
+    <figure class="art">
+      <svg viewBox="0 0 480 320" role="img" aria-label="Bramble and Pip look at their empty dirt patches while Downsy imagines a pumpkin pie in a thought bubble."><rect width="480" height="320" fill="url(#sky)"/><path d="M0 244 L480 244 L480 320 L0 320Z" fill="var(--grass)"/><ellipse cx="350" cy="292" rx="44" ry="12" fill="#a07a58"/><ellipse cx="438" cy="300" rx="36" ry="10" fill="#a07a58"/><g transform="translate(470 150) scale(-1 1)" style="--cow:#8b5a3c;--spot:#5a3622;--tuft:#5a3622"><use href="#cow" width="140" height="101.8"/></g><g transform="translate(338 196) scale(-1 1)" style="--cow:#f6ecda;--spot:#c49a6c;--tuft:#c49a6c"><use href="#cow" width="88" height="64.0"/></g><path d="M276 236 q3 6 0 9 q-3 -3 0 -9z" fill="#7cc3e3"/><use href="#downsy" x="14" y="146" width="150" height="109.1"/><g fill="#fff" stroke="var(--line)" stroke-width="3"><circle cx="150" cy="136" r="6"/><circle cx="166" cy="116" r="9"/><ellipse cx="212" cy="74" rx="60" ry="42"/></g><circle cx="212" cy="76" r="28" fill="#e9963f" stroke="var(--line)" stroke-width="3"/><circle cx="212" cy="76" r="20" fill="#f7c27a"/><g stroke="#c9772e" stroke-width="2"><path d="M212 56V96M192 76H232M198 62l28 28M226 62l-28 28"/></g><g fill="#ff9fb5"><circle cx="30" cy="292" r="4"/><circle cx="452" cy="300" r="4"/><circle cx="250" cy="306" r="3"/></g><g fill="var(--butter)"><circle cx="70" cy="304" r="3.5"/><circle cx="410" cy="286" r="3"/></g></svg>
+    </figure>
+    <div class="words">
+      <p class="page-no">Page 5</p>
+      <h3>Empty Patches</h3>
+      <p>Bramble and Pip stared at their empty patches.</p>
+      <p><span class="say">“We forgot,”</span> said Pip in a small voice.</p>
+      <p>Downsy looked at her pumpkin. She looked at her friends. Then she had an idea.</p>
+    </div>
+  </section>
+  <section class="spread" id="pumpkin-6">
+    <figure class="art">
+      <svg viewBox="0 0 480 320" role="img" aria-label="At the evening Fall Festival, under string lights and a banner that says Pumpkin pie for everyone, the herd gathers around a big pumpkin pie."><rect width="480" height="320" fill="url(#dusk)"/><path d="M0 60 Q120 90 240 64 T480 60" fill="none" stroke="#3b2c3f" stroke-width="2"/><circle cx="40" cy="66" r="6" fill="#ffe38a" stroke="var(--line)" stroke-width="2"/><circle cx="110" cy="80" r="6" fill="#ffe38a" stroke="var(--line)" stroke-width="2"/><circle cx="180" cy="78" r="6" fill="#ffe38a" stroke="var(--line)" stroke-width="2"/><circle cx="250" cy="66" r="6" fill="#ffe38a" stroke="var(--line)" stroke-width="2"/><circle cx="320" cy="62" r="6" fill="#ffe38a" stroke="var(--line)" stroke-width="2"/><circle cx="390" cy="70" r="6" fill="#ffe38a" stroke="var(--line)" stroke-width="2"/><circle cx="450" cy="62" r="6" fill="#ffe38a" stroke="var(--line)" stroke-width="2"/><path d="M0 240 L480 240 L480 320 L0 320Z" fill="var(--grass-deep)"/><rect x="92" y="14" width="296" height="42" rx="8" fill="var(--butter)" stroke="var(--line)" stroke-width="3"/><text x="240" y="42" text-anchor="middle" font-family="Sniglet, sans-serif" font-weight="800" font-size="18" fill="var(--line)">Pumpkin pie for everyone!</text><use href="#downsy" x="0" y="162" width="150" height="109.1"/><g transform="translate(470 168) scale(-1 1)" style="--cow:#8b5a3c;--spot:#5a3622;--tuft:#5a3622"><use href="#cow" width="130" height="94.5"/></g><g stroke="var(--line)" stroke-width="3"><rect x="160" y="206" width="10" height="56" fill="var(--wood)"/><rect x="310" y="206" width="10" height="56" fill="var(--wood)"/><rect x="146" y="196" width="188" height="14" rx="4" fill="var(--wood)"/></g><ellipse cx="240" cy="190" rx="58" ry="15" fill="#e9963f" stroke="var(--line)" stroke-width="3"/><ellipse cx="240" cy="188" rx="46" ry="10" fill="#f7c27a"/><g stroke="#c9772e" stroke-width="2"><path d="M240 178V198M200 184l80 8M200 192l80 -8"/></g><use href="#cow" x="196" y="232" width="80" height="58.2" style="--cow:#f6ecda;--spot:#c49a6c;--tuft:#c49a6c"/><g transform="translate(376 236) scale(-1 1)" style="--cow:#f1c9a5;--spot:#c98a5b;--tuft:#c98a5b"><use href="#cow" width="76" height="55.3"/></g></svg>
+    </figure>
+    <div class="words">
+      <p class="page-no">Page 6</p>
+      <h3>Pie for Everyone</h3>
+      <p>At the Fall Festival, Farmer June baked Downsy’s pumpkin into the biggest pie Buttercup Farm had ever seen.</p>
+      <p>One pumpkin made thirty-two slices, one for every cow.</p>
+      <p>The next spring, every calf on the farm made a chart. They all watered together, every single morning.</p>
+    </div>
+  </section>
+  <section class="the-end" aria-label="The end">
+    <p>The End</p>
+    <small>One seed. One hundred and twelve mornings. Thirty-two slices.</small>
+  </section>
+  <nav class="story-next" aria-label="More stories">
+    <a class="start" href="#speed">Read Book 1 again</a>
+    <a class="back" href="#shelf">All stories</a>
+  </nav>
+</article>
 
-  <section class="grownups" aria-labelledby="grownups-title">
+
+  <section class="grownups home-only" aria-labelledby="grownups-title">
     <div>
       <h2 id="grownups-title">For grown-ups reading along</h2>
       <p>Down syndrome happens when a baby is born with an extra copy of chromosome 21. It is the most common chromosomal condition, and it is nobody’s fault.</p>
       <p>Many kids with Down syndrome have low muscle tone, which is why Downsy tires on the hill and practices with Farmer June. Many work with physical, speech and occupational therapists, and many wear glasses.</p>
       <p>Kids with Down syndrome learn, play, make friends, get mad and have strong opinions, like any kid. Some things take them longer. Some things they are great at.</p>
+      <p>Speech often develops more slowly, so many children with Down syndrome use signs, such as ASL or Makaton, alongside words. Downsy’s hoof signs in <em>The Big Words</em> come from that.</p>
       <p>World Down Syndrome Day is March 21, written 3/21, for the three copies of chromosome 21. That is why Downsy’s ear tag says <span class="tag">321</span>.</p>
     </div>
     <div>
       <h3>Things to talk about</h3>
       <ul>
-        <li>Why did Bramble call Downsy “slowpoke”? How do you think it made her feel?</li>
-        <li>Downsy got mad and kicked the bucket. Then she practiced again the next day. What helps you when something is hard?</li>
-        <li>What did Downsy notice that nobody else did? Why did she notice it?</li>
+        <li><strong>Downsy’s Speed:</strong> Why did Bramble call Downsy “slowpoke”? What did Downsy notice that nobody else did?</li>
+        <li><strong>The Big Words:</strong> How did the herd help Downsy on stage? What are some ways to say something without words?</li>
+        <li><strong>Barn School:</strong> How did Downsy help Pip feel welcome? What could you do for a new kid at your school?</li>
+        <li><strong>Downsy’s Pumpkin:</strong> Why did Downsy’s pumpkin grow when the others didn’t? What is something you do every day?</li>
         <li>What is something you do at your own speed?</li>
       </ul>
       <h3>Learn more</h3>
@@ -701,6 +1083,25 @@
     if (audio.error) { wrap.hidden = true; disarm(); }
     var started = window.downsySongStart || audio.play();
     if (started && started.then) started.then(disarm).catch(function () {});
+  })();
+
+  // Bookshelf routing: #speed, #words, #school, #pumpkin open a book; anything else shows the shelf.
+  (function () {
+    var stories = [].slice.call(document.querySelectorAll('.story'));
+    var homeOnly = [].slice.call(document.querySelectorAll('.home-only'));
+    function route() {
+      var id = (location.hash || '').slice(1);
+      var open = stories.filter(function (a) { return a.id === id; })[0] || null;
+      stories.forEach(function (a) { a.hidden = a !== open; });
+      homeOnly.forEach(function (e) { e.hidden = !!open; });
+      if (open) { window.scrollTo(0, 0); document.title = open.getAttribute('aria-label') + ' · Downsy Cow'; }
+      else {
+        document.title = 'Downsy Cow';
+        if (id === 'shelf') document.getElementById('shelf').scrollIntoView();
+      }
+    }
+    window.addEventListener('hashchange', route);
+    route();
   })();
 
   (function () {
